@@ -1,8 +1,11 @@
+html {
+    background-color: rgb(122, 122, 137);
+}
+
 body {
     display: flex;
     justify-content: center;
     margin-top: 150px;
-    background-color: rgb(122, 122, 137);
     gap: 100px;
 }
 
