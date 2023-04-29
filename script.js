@@ -24,10 +24,10 @@ const buttonContainer = document.createElement('div');
 buttonContainer.classList.add('button-container');
 document.body.appendChild(buttonContainer);
 
-const resetButton = document.createElement('button');
-resetButton.classList.add('button');
-resetButton.innerHTML = 'Reset';
-buttonContainer.appendChild(resetButton);
+const eraseButton = document.createElement('button');
+eraseButton.classList.add('button');
+eraseButton.innerHTML = 'Erase';
+buttonContainer.appendChild(eraseButton);
 
 const rainbowButton = document.createElement('button');
 rainbowButton.classList.add('button');
@@ -39,27 +39,19 @@ grayScaleButton.classList.add('button');
 grayScaleButton.innerHTML = 'Grayscale';
 buttonContainer.appendChild(grayScaleButton);
 
-for (let i = 0; i < size * size; i++) {
-    const square = document.createElement('div');
-    square.classList.add('square');
-    squareContainer.appendChild(square);
-}
-
 const mainCornerSize = squareContainer.clientWidth;
+let initialSize = pixelResize(mainCornerSize, size);
+squareCreator(size, initialSize);
+
+
 pixelSlider.addEventListener('input', function(e) {
     size = e.target.value;
     let newSquareSize = pixelResize(mainCornerSize, size);
     while (squareContainer.firstChild) {
         squareContainer.removeChild(squareContainer.lastChild);
     }
-
-    for (let i = 0; i < size * size; i++) {
-        const square = document.createElement('div');
-        square.classList.add('square');
-        squareContainer.appendChild(square);
-        square.style.cssText = `width: ${newSquareSize}px; height: ${newSquareSize}px`;
-    }
-    sliderText.innerHTML = `${size} X ${size}`;
+    squareCreator(size, newSquareSize);
+    sliderText.textContent= `${size} X ${size}`;
     squares = document.querySelectorAll('.square');
     squares.forEach(square => {
         square.addEventListener('mouseover', function(e) {
@@ -69,21 +61,26 @@ pixelSlider.addEventListener('input', function(e) {
     })
 })
 
+let colorMode;
+const buttons = document.querySelectorAll('button');
+buttons.forEach(button =>
+    button.addEventListener('click', function(e) {
+        colorMode = e.target.innerHTML;
+    })
+)
+
+squares = document.querySelectorAll('.square');
+squares.forEach(square => {
+    square.addEventListener('mouseover', function(e) {
+        let newColor = randomColor(colorMode);
+        e.target.style.cssText = newColor;
+    })
+})
+
 function pixelResize(mainCornerSize, size) {
     let newSquareSize = mainCornerSize / size;
     return newSquareSize;
 }
-
-
-
-let colorMode;
-const buttons = document.querySelectorAll('button');
-buttons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-        colorMode = e.target.innerHTML;
-        console.log(colorMode);
-})
-})
 
 function randomColor (colorMode) {
     if (colorMode === "Rainbow") {
@@ -96,17 +93,18 @@ function randomColor (colorMode) {
         let greenIndex = redIndex;
         let blueIndex = greenIndex;
         return `background-color: rgb(${redIndex}, ${greenIndex}, ${blueIndex})`;
-    } else if (colorMode === "Reset") {
+    } else if (colorMode === "Erase") {
         return "#413D3D";
     }
 }
 
-squares = document.querySelectorAll('.square');
-    squares.forEach(square => {
-        square.addEventListener('mouseover', function(e) {
-            let newColor = randomColor(colorMode);
-            e.target.style.cssText = newColor;
-        })
-    })
+function squareCreator(size, squareSize) {
+    for (let i = 0; i < size * size; i++) {
+        const square = document.createElement('div');
+        square.classList.add('square');
+        squareContainer.appendChild(square);
+        square.style.cssText = `width: ${squareSize}px; height: ${squareSize}px`;
+    }
+}
 
 

@@ -54,6 +54,19 @@ button {
     width: 300px;
     height: 75px;
     font-size: 50px;
+    border-radius: 25px;
+}
+
+button:active,
+button:hover,
+button:focus{
+    color: red;
+    background-color: black;
+    border: 2px solid red;
+}
+
+button:active {
+    scale: 1.1;
 }
 
 
